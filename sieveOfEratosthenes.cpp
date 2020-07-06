@@ -14,14 +14,14 @@ int main(){
 
     for(int i=2; i<=MAX_NUM; i++){
         if(!numbers[i]) continue;
-
+        
         for(int j=i*2; j<=MAX_NUM; j+=i){
             numbers[j] = false;
         }
     }
 
     for(int i=2; i<=MAX_NUM; i++){
-        cout << i << ' ';
+        if(numbers[i]) cout << i << ' ';
     }
 
     cout << endl;
