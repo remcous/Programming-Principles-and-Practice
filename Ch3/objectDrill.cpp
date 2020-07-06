@@ -1,5 +1,5 @@
 // read and write a first name
-#include "std_lib_facilities.h"
+#include "../std_lib_facilities.h"
 
 int main(){
     cout << "Enter the name of the person you want to write to: \n";
