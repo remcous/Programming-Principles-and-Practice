@@ -7,21 +7,36 @@
 #include "../std_lib_facilities.h"
 
 int main(){
-    cout << "Please enter expression (we can handle + and -): ";
+    cout << "Please enter expression (we can handle +,-,*, and /)\n";
+    cout << "Add an x to end expression (e.g., 1+2*3x): ";
     int lval = 0;
     int rval;
-    char op;
-    int res;
+    cin >> lval;    // Read leftmost operand
+    
+    if(!cin) error("No first operand");
 
-    cin >> lval >> op >> rval;  // reads something like 1 + 3
-
-    if(op == '+') 
-        res = lval + rval;
-    else if (op == '-')
-        res = lval - rval;
-
-    cout << "Result: " << res << '\n';
-    keep_window_open();
-
-    return 0;
+    for(char op; cin>>op;){  // Read operator and right-hand operand
+                            // repeatedly
+        if(op!='x') cin >> rval;
+        if(!cin) error("No second operand");
+        switch(op){
+        case '+':
+            lval += rval;   // add: lval = lval + rval
+            break;
+        case '-':
+            lval -= rval;   // subtract: lval = lval - rval
+            break;
+        case '*':
+            lval *= rval;   // multiply: lval = lval * rval
+            break;
+        case '/':
+            lval /= rval;   // divide: lval = lval / rval
+            break;
+        default:            // Not another operator: print result
+            cout << "Result: " << lval << '\n';
+            keep_window_open();
+            return 0;
+        }
+    }
+    error("Bad expression");
 }
