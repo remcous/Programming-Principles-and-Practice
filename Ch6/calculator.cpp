@@ -4,7 +4,7 @@
 *      with C++ by Bjarne Stroustrup
 ****************************************/
 
-#include "std_lib_facilities.h"
+#include "../std_lib_facilities.h"
 
 int main(){
     cout << "Please enter expression (we can handle + and -): ";
