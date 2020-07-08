@@ -1,4 +1,2 @@
-sieveOfEratosthenes
-objectDrill
-computationDrill
+**/*.exe
 .DS_Store

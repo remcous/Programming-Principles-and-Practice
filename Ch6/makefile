@@ -1,7 +1,7 @@
-all: calculator
+all: calculator exercise2 exercise3
 
-calculator: calculator.cpp
-	g++ -std=c++14 $< -o $(<:.cpp=)
+.cpp:
+	g++ -std=c++14 $< -o $(<:.cpp=.exe)
 
 clean:
-	rm calculator
+	rm *.exe
