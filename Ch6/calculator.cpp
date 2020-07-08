@@ -6,37 +6,116 @@
 
 #include "../std_lib_facilities.h"
 
-int main(){
-    cout << "Please enter expression (we can handle +,-,*, and /)\n";
-    cout << "Add an x to end expression (e.g., 1+2*3x): ";
-    int lval = 0;
-    int rval;
-    cin >> lval;    // Read leftmost operand
-    
-    if(!cin) error("No first operand");
+class Token {
+public:
+    char kind;        // what kind of token
+    double value;     // for numbers: a value 
+    Token(char ch)    // make a Token from a char
+        :kind(ch), value(0) { }    
+    Token(char ch, double val)     // make a Token from a char and a double
+        :kind(ch), value(val) { }
+};
 
-    for(char op; cin>>op;){  // Read operator and right-hand operand
-                            // repeatedly
-        if(op!='x') cin >> rval;
-        if(!cin) error("No second operand");
-        switch(op){
+Token get_token()    // read a token from cin
+{
+    char ch;
+    cin >> ch;    // note that >> skips whitespace (space, newline, tab, etc.)
+
+    switch (ch) {
+    case '(': case ')': case '+': case '-': case '*': case '/': 
+        return Token(ch);        // let each character represent itself
+    case '.':
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
+        {    
+            cin.putback(ch);         // put digit back into the input stream
+            double val;
+            cin >> val;              // read a floating-point number
+            return Token('8',val);   // let '8' represent "a number"
+        }
+    default:
+        error("Bad token");
+    }
+}
+
+double expression();    // deal with + and -
+double term();          // deal with *, /, and %
+double primary();       // deal with numbers and parentheses
+
+int main(){
+    try{
+        while(cin)
+            cout << "=" << expression() << '\n';
+        keep_window_open();
+    }
+    catch(exception& e){
+        cerr << e.what() << '\n';
+        keep_window_open();
+        return 1;
+    }
+    catch(...){
+        cerr << "exception\n";
+        keep_window_open();
+        return 2;
+    }
+}
+
+double expression(){
+    double left = term();       // read and evaluate as a Term
+    Token t = get_token();      // get the next token
+
+    while(true){
+        switch(t.kind){
         case '+':
-            lval += rval;   // add: lval = lval + rval
+            left += term();     // evaluate Term and add
+            t = get_token();
             break;
         case '-':
-            lval -= rval;   // subtract: lval = lval - rval
+            left -= term();     // evaluate Term and subtract
+            t = get_token();
             break;
-        case '*':
-            lval *= rval;   // multiply: lval = lval * rval
-            break;
-        case '/':
-            lval /= rval;   // divide: lval = lval / rval
-            break;
-        default:            // Not another operator: print result
-            cout << "Result: " << lval << '\n';
-            keep_window_open();
-            return 0;
+        default:
+            return left;        // finally: no more + or -; return the answer
         }
     }
-    error("Bad expression");
+}
+
+double term(){
+    double left = primary();
+    Token t = get_token();
+    while(true){
+        switch(t.kind){
+        case '*':
+            left *= primary();
+            t = get_token();
+            break;
+        case '/':
+        {
+            double d = primary();
+            if(d == 0) error("divide by zero");
+            left /= d;
+            t = get_token();
+            break;
+        }
+        default:
+            return left;
+        }
+    }
+}
+
+double primary(){
+    Token t = get_token();
+    switch(t.kind){
+    case '(':   // Handle '(' expression ')'
+    {
+        double d = expression();
+        t = get_token();
+        if(t.kind != ')') error("')' expected");
+        return d;
+    }
+    case '8':           // we use '8' to represent a number
+        return t.value; // return the number's value
+    default:
+        error("primary expected");
+    }
 }
