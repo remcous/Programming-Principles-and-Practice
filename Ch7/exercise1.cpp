@@ -2,6 +2,8 @@
     Simple Calculator
 
     Revision History:
+        Exercise 1 - added support for underscores 
+                    in variable names - Remi Coussement July 2020
         Added variable support - Remi Coussement July 2020
         Revised by Remi Coussement July 2020
         Originally written by Bjarne Stroustrup Spring 2004
