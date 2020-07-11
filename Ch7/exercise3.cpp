@@ -26,6 +26,7 @@
 
     Declaration:
         "let" name "=" Expression
+        "const" name "=" Expression
 
     Print:
         ;
@@ -90,7 +91,9 @@ class Variable{
 public:
     string name;
     double value;
-    Variable(string n, double v) : name{n}, value{v} {};
+    bool is_const;
+    Variable(string n, double v) : name{n}, value{v}, is_const{false} {}
+    Variable(string n, double v, bool c): name{n}, value{v}, is_const{c} {}
 };
 
 /****************************************
@@ -106,8 +109,8 @@ double get_value(string s); // return the value of the Variable named s
 void set_value(string s, double d); // set the variable named s to d
 double statement();     // deal with declaration and expressions
 bool is_declared(string var);   // is var already in var_table?
-double define_name(string var, double val); // add {var, val} to var_table
-double declaration();   // declare variables and store in var_table
+double define_name(string var, double val, bool const); // add {var, val} to var_table}
+double declaration(bool is_const);   // declare variables and store in var_table
 
 /****************************************
 *           GLOBAL VARIABLES
@@ -122,6 +125,8 @@ const string prompt = "> ";
 const string result = "= "; // used to indicate that what follows is a result
 const char name = 'a';      // name Token
 const char let = 'L';       // declaration Token
+const char constant = 'c';          // const Token
+const string constkey = "const";    // constant keyword
 const string declkey = "let";    // declaration keyword
 
 /****************************************
@@ -131,8 +136,8 @@ const string declkey = "let";    // declaration keyword
 int main(){
     try{
         // predefine names:
-        define_name("pi", 3.1415926535);
-        define_name("e", 2.7182818284);
+        define_name("pi", 3.1415926535, true);
+        define_name("e", 2.7182818284, true);
 
         calculate();
         keep_window_open("~~"); // cope with Windows console mode
@@ -158,7 +163,9 @@ double statement(){
     Token t = ts.get();
     switch(t.kind){
     case let:
-        return declaration();
+        return declaration(false);
+    case constant:
+        return declaration(true);
     default:
         ts.putback(t);
         return expression();
@@ -282,6 +289,7 @@ double get_value(string s){
 void set_value(string s, double d){
     for(Variable& v : var_table)
         if(v.name == s){
+            if(v.is_const) error("Cannot alter constant value ", s);
             v.value = d;
             return;
         }
@@ -294,14 +302,14 @@ bool is_declared(string var){
     return false;
 }
 
-double define_name(string var, double val){
+double define_name(string var, double val, bool is_const=false){
     if(is_declared(var)) error(var, " declared twice");
-    var_table.push_back(Variable{var, val});
+    var_table.push_back(Variable{var, val, is_const});
     return val;
 }
 
-double declaration(){
-    // assume we have seen "let"
+double declaration(bool is_const = false){
+    // assume we have seen "let" or "const"
     // handle: name = expression
     // declare a variable called "name" with the initial value "expression"
     Token t = ts.get();
@@ -312,7 +320,7 @@ double declaration(){
     if(t2.kind != '=') error("= missing in declaration of ", var_name);
 
     double d = expression();
-    define_name(var_name, d);
+    define_name(var_name, d, is_const);
     return d;
 }
 
@@ -366,6 +374,7 @@ Token Token_stream::get(){
             while(cin.get(ch)&&(isalpha(ch)||isdigit(ch)||ch=='_')) s+=ch;
             cin.putback(ch);
             if(s == declkey) return Token{let}; // declaration keyword
+            if(s == constkey) return Token{constant};   // constant keyword
             return Token{name, s};
         }
         error("Bad token");
