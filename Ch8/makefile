@@ -9,6 +9,9 @@ use.o: use.cpp my.h
 my.o: my.cpp my.h
 	g++ -std=c++14 -c my.cpp
 
+.cpp:
+	g++ -std=c++14 $< -o $(<:.cpp=.exe)
+
 clean:
 	rm *.exe
 	rm *.o
