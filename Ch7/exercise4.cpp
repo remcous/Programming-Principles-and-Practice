@@ -2,6 +2,8 @@
     Simple Calculator
 
     Revision History:
+        Exercise 5 - added support for printing on newline not requiring ';' input
+                    Remi Coussement July 2020
         Exercise 4 - Created class Symbol_table to handle variable interactions
                     Remi Coussement July 2020
         Exercise 3 - Supprt for constants added - Remi Coussement July 2020
@@ -325,8 +327,13 @@ Token Token_stream::get(){
     }
 
     char ch;
-    cin >> ch;          // note that >> skips whitespace(space, newline, tab, etc)
 
+    while(ch = cin.get()){
+        if(isspace(ch)){
+            if(ch == '\n') return Token{print};
+        }else break;
+    }
+    
     switch(ch){
     case print: // for print
     case quit:  // for quit
