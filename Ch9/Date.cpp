@@ -4,26 +4,32 @@
 *			CLASS/STRUCT DEFINITIONS
 ***********************************************/
 
-// Simple Date (some people prefer implementation details last)
-class Date{
-public:
-	class Invalid{};			// to be used as exception
-	Date(int y, int m, int d);	// check for valid date and initialize
-	void add_day(int n);		// increase the Date by n days
-	int month(){return m;}
-	int day(){return d;}
-	int year(){return y;}
-private:
-	int y,m,d;			// year, month, day
-	bool is_valid();	// return true if date is valid
-};
-
 enum class Month{
 	jan=1,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec
 };
 
 enum class Day{
 	monday,tuesday,wednesday,thursday,friday,saturday,sunday
+};
+
+// Simple Date (some people prefer implementation details last)
+class Date{
+public:
+	// ...
+	Month month() const{return m;}	// const member: can't modify the object
+	int day() const{return d;}	// const member: can't modify the object
+	int year() const{return y;}	// const member: can't modify the object
+
+	class Invalid{};			// to be used as exception
+	Date(int y, Month m, int d);	// check for valid date and initialize
+	void add_day(int n);		// increase the Date by n days
+	void add_month(int n);
+	void add_year(int n);
+	
+private:
+	int y;				// year
+	Month m;
+	int d;				// day
 };
 
 /***********************************************
@@ -81,18 +87,11 @@ ostream& operator<<(ostream& os, Month m){
 *			  DATE MEMBER FUNCTIONS
 ***********************************************/
 
-Date::Date(int yy, int mm, int dd)	// Constructor
+Date::Date(int yy, Month mm, int dd)	// Constructor
 	:y{yy}, m{mm}, d{dd}
 {
-	if(!is_valid()) throw Invalid{};
 }
 
 void Date::add_day(int n){
 	//	...
-}
-
-bool Date::is_valid(){
-	if(m<1||m>12) return false;
-	// ...
-	return true;
 }
