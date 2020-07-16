@@ -2,7 +2,10 @@
 *	Exercise 2: design and implement a name_pair class
 *	By: Remi Coussement
 *	Rev:
-*		
+*		Exercise 3 - add support for <<, ==, and !=
+*				July 2020
+*		Exercise 2 - Name_pairs and member functions 
+*				July 2020		
 ******************************************************/
 #include "../std_lib_facilities.h"
 
@@ -18,11 +21,21 @@ public:
 	void read_ages();
 	void print();
 	void sort();
+	const vector<string>& get_name() const{return name;}
+	const vector<double>& get_age() const{return age;}
 	Name_pairs(){}
 private:
 	vector<string> name;
 	vector<double> age;
 };
+
+/**********************************
+*		  FUNCTION PROTOTYPE
+**********************************/
+
+ostream& operator<<(ostream& os, const Name_pairs& np);
+bool operator==(const Name_pairs& lnp, const Name_pairs& rnp);
+bool operator!=(const Name_pairs& lnp, const Name_pairs& rnp);
 
 /**********************************
 *			MAIN PROGRAM
@@ -35,12 +48,10 @@ int main(){
 		np.read_names();
 		np.read_ages();
 
-		cout << "First order:\n";
-		np.print();
+		cout << "First order:\n" << np;
 
 		np.sort();
-		cout << "\n\nSorted order:\n";
-		np.print();
+		cout << "\n\nSorted order:\n" << np;
 
 		return 0;
 	}catch(exception& e){
@@ -100,4 +111,52 @@ void Name_pairs::sort(){
 			}
 		}
 	}
+}
+
+/**********************************
+*		   GLOBAL FUNCTIONS
+**********************************/
+
+ostream& operator<<(ostream& os, const Name_pairs& np){
+	vector<string> name = np.get_name();
+	vector<double> age = np.get_age();
+	if(name.size() != age.size()){
+		error("print() name and age must have the same number of elements");
+	}
+	for(int i=0;i<name.size();i++){
+		os << name[i] << ' ' << age[i] << '\n';
+	}
+	return os;
+}
+
+bool operator==(const Name_pairs& lnp, const Name_pairs& rnp){
+	if(lnp.get_name().size() != rnp.get_name().size() ||
+		lnp.get_name().size() != lnp.get_age().size() ||
+		lnp.get_name().size() != rnp.get_age().size())
+		return false;
+	vector<string> left_name = lnp.get_name();
+	vector<string> right_name = rnp.get_name();
+	vector<double> left_age = lnp.get_age();
+	vector<double> right_age = rnp.get_age();
+	for(int i=0;i<left_name.size();i++){
+		if(left_name[i] != right_name[i]) return false;
+		if(left_age[i] != right_age[i]) return false;
+	}
+	return true;
+}
+
+bool operator!=(const Name_pairs& lnp, const Name_pairs& rnp){
+	if(lnp.get_name().size() != rnp.get_name().size() ||
+		lnp.get_name().size() != lnp.get_age().size() ||
+		lnp.get_name().size() != rnp.get_age().size())
+		return true;
+	vector<string> left_name = lnp.get_name();
+	vector<string> right_name = rnp.get_name();
+	vector<double> left_age = lnp.get_age();
+	vector<double> right_age = rnp.get_age();
+	for(int i=0;i<left_name.size();i++){
+		if(left_name[i] != right_name[i]) return true;
+		if(left_age[i] != right_age[i]) return true;
+	}
+	return false;
 }
