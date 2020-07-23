@@ -1,15 +1,10 @@
 #include "../std_lib_facilities.h"
-
-struct Reading{			// a temperature reading
-	int hour{0};			// hour after midnight [0:23]
-	double temperature{0};	// in fahrenheit
-};
-
-ostream& operator<<(ostream& os, const Reading& reading);
-istream& operator>>(istream& is, Reading& reading);
+#include "reading.h"
 
 #define OUT_FILE "raw_temps.txt"
 #define NUM_READINGS 50
+#define MIN_TEMP -4
+#define MAX_TEMP 104
 
 int main(){
 	try{
@@ -25,31 +20,21 @@ int main(){
 
 			hr = rand() % 24;
 			// mapping random doubles to range -4:104 F (-20:40 C)
-			temp = ((double)rand()/RAND_MAX)*(108)-4;
-			
+			temp = ((double)rand()/RAND_MAX)
+				* (MAX_TEMP-MIN_TEMP)+MIN_TEMP;
+
 			reading.hour = hr;
 			reading.temperature = temp;
 
-			ofs << reading << '\n';
+			ofs << reading;
+
+			if(rand()%2 == 0) ofs << "f\n";
+			else ofs << "c\n";
+
 		}
 	}catch(exception& e){
 		cerr << e.what() << '\n';
 		return 1;
 	}
 	return 0;
-}
-
-ostream& operator<<(ostream& os, const Reading& reading){
-	os << reading.hour << " : " << reading.temperature;
-	return os;
-}
-
-istream& operator>>(istream& is, Reading& reading){
-	int hr;
-	double temp;
-	is >> hr >> temp;
-	if(hr<0 || hr > 23) error(">> Reading failed - hour out of bounds");
-	if(temp < -459.67) error("Temperature is below absolute zero...are you sure?");
-	reading.hour = hr; reading.temperature = temp;
-	return is;
 }
