@@ -30,7 +30,6 @@ int main(){
 
 			if(rand()%2 == 0) ofs << "f\n";
 			else ofs << "c\n";
-
 		}
 	}catch(exception& e){
 		cerr << e.what() << '\n';
