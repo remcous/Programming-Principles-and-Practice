@@ -60,6 +60,14 @@ struct Arrow : Shape{
     void draw_lines() const;
 };
 
+struct Regular_hexagon : Shape{
+    Regular_hexagon(Point c, int r);
+
+    void draw_lines() const;
+private:
+    int radius;
+};
+
 /****************************************
 *           FUNCTION PROTOTYPES
 ****************************************/
@@ -138,6 +146,11 @@ int main(){
         win.attach(rect_s);
         win.attach(rect_w);
         win.attach(rect_center);
+
+        Regular_hexagon hex{Point{300,300}, 100};
+        hex.set_fill_color(Color::blue);
+
+        win.attach(hex);
 
         win.wait_for_button();
     }
@@ -242,4 +255,39 @@ Point w(Rectangle& r){
 
 Point center(Rectangle& r){
     return Point{r.point(0).x+r.width()/2, r.point(0).y+r.height()/2};
+}
+
+Regular_hexagon::Regular_hexagon(Point c, int r)
+: radius{r}{
+    add(c);
+}
+
+void Regular_hexagon::draw_lines() const{
+    double angle = M_PI / 3; // pi/3 = 60 deg
+
+    Point points[6];
+
+    for(double t=0; t<2*M_PI; t+= angle){
+        static int x,y,i=0;
+        x = cos(t) * radius + point(0).x;
+        y = sin(t) * radius + point(0).y;
+        points[i] = Point{x,y};
+        i++;
+    }
+
+    for(int i=0; i<sizeof(points)/sizeof(Point); i++)
+        fl_line(points[i].x, points[i].y, points[i+1].x, points[i+1].y);
+    fl_line(points[sizeof(points)/sizeof(Point)-1].x, 
+            points[sizeof(points)/sizeof(Point)-1].y, 
+            points[0].x, points[0].y);
+
+    if (fill_color().visibility()) {
+        fl_color(fill_color().as_int());
+        fl_begin_complex_polygon();
+        for(int i=0; i<sizeof(points)/sizeof(Point); ++i){
+            fl_vertex(points[i].x, points[i].y);
+        }
+        fl_end_complex_polygon();
+        fl_color(color().as_int()); // reset color
+    }
 }
