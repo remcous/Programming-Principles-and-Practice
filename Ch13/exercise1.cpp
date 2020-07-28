@@ -311,6 +311,8 @@ void Regular_hexagon::draw_lines() const{
 Regular_polygon::Regular_polygon(Point c, int r, int s)
     : center{c}, radius{r}, sides{s}
 {
+    if(sides <= 2) error("Regular_polygon: can't produce polygon with less than 3 sides");
+    
     double angle = 2 * M_PI / sides;
 
     for(double t=0; t<2*M_PI; t+= angle){
