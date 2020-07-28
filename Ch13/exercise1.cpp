@@ -68,6 +68,15 @@ private:
     int radius;
 };
 
+struct Regular_polygon : Closed_polyline{
+    Regular_polygon(Point c, int r, int s);
+
+private:
+    Point center;
+    int radius;
+    int sides;
+};
+
 /****************************************
 *           FUNCTION PROTOTYPES
 ****************************************/
@@ -151,6 +160,14 @@ int main(){
         hex.set_fill_color(Color::blue);
 
         win.attach(hex);
+
+        Regular_polygon poly1{Point{600,600}, 75, 3};
+        poly1.set_fill_color(Color::cyan);
+        win.attach(poly1);
+
+        Regular_polygon poly2{Point{200,600}, 50, 12};
+        poly2.set_fill_color(Color::dark_red);
+        win.attach(poly2);
 
         win.wait_for_button();
     }
@@ -289,5 +306,17 @@ void Regular_hexagon::draw_lines() const{
         }
         fl_end_complex_polygon();
         fl_color(color().as_int()); // reset color
+    }
+}
+Regular_polygon::Regular_polygon(Point c, int r, int s)
+    : center{c}, radius{r}, sides{s}
+{
+    double angle = 2 * M_PI / sides;
+
+    for(double t=0; t<2*M_PI; t+= angle){
+        static int x,y,i=0;
+        x = cos(t) * radius + center.x;
+        y = sin(t) * radius + center.y;
+        add(Point{x,y});
     }
 }
