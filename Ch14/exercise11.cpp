@@ -59,7 +59,7 @@ public:
 		Binary_tree::Line_type lt)
 			:Binary_tree{root, level, lt}{}
 
-	void draw_lines() const;
+	void draw_nodes() const;
 };
 
 struct Arrow : public Shape{
@@ -96,10 +96,11 @@ int main(){
 
         win.attach(bt);
         
-        Triangle_binary_tree tbt{Point{WIDTH/2, 400},5};
+        Triangle_binary_tree tbt{Point{WIDTH/2, 400},6};
 
         tbt.set_color(Color::black);
         tbt.set_fill_color(Color::red);
+        tbt.set_line_type(Binary_tree::Line_type::arrow_down);
 
         tbt.set_radius(10);
 
@@ -188,11 +189,7 @@ Binary_tree::Binary_tree(Point root, int level, Line_type lt)
 
 void Binary_tree::draw_lines() const{
 	if(color().visibility()){
-    	fl_color(color().as_int());
-
-		for(int i=0; i<number_of_points(); i++){
-			fl_arc(point(i).x-r, point(i).y-r, r+r, r+r, 0, 360);
-		}
+		fl_color(color().as_int());
 
 		switch(line_type){
 		case Line_type::solid:
@@ -296,6 +293,16 @@ void Binary_tree::draw_lines() const{
 		}
 	}
 
+	draw_nodes();
+}
+
+void Binary_tree::draw_nodes() const{
+	fl_color(color().as_int());
+
+	for(int i=0; i<number_of_points(); i++){
+		fl_arc(point(i).x-r, point(i).y-r, r+r, r+r, 0, 360);
+	}
+
 	if(fill_color().visibility()){
         fl_color(fill_color().as_int());
 		for(int i=0; i<number_of_points(); i++){
@@ -304,9 +311,7 @@ void Binary_tree::draw_lines() const{
 		fl_color(color().as_int());
 	}
 }
-
-void Binary_tree::draw_nodes() const{}
-
+/*
 void Triangle_binary_tree::draw_lines() const{
 	if(color().visibility()){
     	fl_color(color().as_int());
@@ -320,6 +325,30 @@ void Triangle_binary_tree::draw_lines() const{
 		for(int i=0; i<number_of_points()/2; i++){
 			fl_line(point(i).x, point(i).y, point(2*i+1).x, point(2*i+1).y);
 			fl_line(point(i).x, point(i).y, point(2*i+2).x, point(2*i+2).y);
+		}
+	}
+
+	if(fill_color().visibility()){
+        fl_color(fill_color().as_int());
+        for(int i=0; i<number_of_points(); i++){
+    		fl_begin_complex_polygon();
+            fl_vertex(point(i).x, point(i).y-r);
+            fl_vertex(point(i).x+sqrt(3)/2*r, point(i).y+r/2);
+            fl_vertex(point(i).x-sqrt(3)/2*r, point(i).y+r/2);
+            fl_end_complex_polygon();
+        }
+		fl_color(color().as_int());
+	}
+}*/
+
+void Triangle_binary_tree::draw_nodes() const{
+	if(color().visibility()){
+    	fl_color(color().as_int());
+
+		for(int i=0; i<number_of_points(); i++){
+			fl_line(point(i).x, point(i).y-r, point(i).x+sqrt(3)/2*r, point(i).y+r/2);
+			fl_line(point(i).x+sqrt(3)/2*r, point(i).y+r/2, point(i).x-sqrt(3)/2*r, point(i).y+r/2);
+			fl_line(point(i).x-sqrt(3)/2*r, point(i).y+r/2,point(i).x, point(i).y-r);
 		}
 	}
 
