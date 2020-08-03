@@ -143,6 +143,7 @@ Arrow::Arrow(Point a, Point b){
 }
 
 void Arrow::draw_lines() const{
+    fl_color(color().as_int()); // reset color
     fl_line(point(0).x, point(0).y, point(1).x, point(1).y);
     fl_line(point(1).x, point(1).y, point(2).x, point(2).y);
     fl_line(point(2).x, point(2).y, point(3).x, point(3).y);

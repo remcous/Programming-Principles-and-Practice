@@ -24,7 +24,7 @@ public:
 
 	void resize(int ww, int hh) { w=ww, h=hh; size(ww,hh); }
 
-	void set_label(const string& s) { label(s.c_str()); }
+    void set_label(const string& s) { copy_label(s.c_str()); }
 
 	void attach(Shape& s);
 	void attach(Widget& w);

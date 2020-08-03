@@ -8,8 +8,8 @@
 */
 
 #include "../std_lib_facilities.h"
-#include "Simple_window.h"
-#include "Graph.h"
+#include "../Libraries/Simple_window.h"
+#include "../Libraries/Graph.h"
 
 /****************************************
 *           CLASS DEFINITIONS
