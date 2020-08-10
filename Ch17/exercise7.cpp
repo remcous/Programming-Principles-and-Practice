@@ -46,6 +46,8 @@ int main(){
 
         cout << array << endl;
 
+        delete[] array;
+
         // using string
         cout << "\nEnter a string: using ! to indicate the end\n";
 
