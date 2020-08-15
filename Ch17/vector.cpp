@@ -27,6 +27,8 @@ public:
 		{delete[] elem;}			// free memory
 
 	int size() const{ return sz; }	// the current size
+	double get(int n) const{return elem[n];}	// access: read
+	void set(int n, double v){elem[n]=v;}		// access: write
 };
 
 /****************************************
