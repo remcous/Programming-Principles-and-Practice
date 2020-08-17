@@ -84,6 +84,14 @@ private:
 };
 
 /****************************************
+*          FUNCTION PROTOTYPES
+****************************************/
+
+/****************************************
+*          GLOBAL VARIABLES
+****************************************/
+
+/****************************************
 *             MAIN FUNCTION
 ****************************************/
 
@@ -175,11 +183,15 @@ int main(){
         		
         		// verify rooms are within range
         		break;
-        	/*
+			/*
         	case 'd':	// get debug printout of all rooms, tunnels, and hazards
         		cave.print_all();
         		break;
-        	*/
+        		*/
+        	case 'q':
+        		cout << "Shutting down game...\n";
+        		pc.die();
+        		continue;
         	default:
         		cerr << "\nError: unknown command\n\n";
         		continue;
@@ -240,12 +252,10 @@ int main(){
     }
     catch(exception& e){
         cerr << e.what() << '\n';
-        keep_window_open("~~");
         return 1;
     }
     catch(...){
-        cerr << "exception\n";
-        keep_window_open("~~");
+        cerr << "Unknown exception\n";
         return 2;
     }
     return 0;
@@ -381,6 +391,10 @@ int Cave::get_room_num(Room* room){
 	return -1;
 }
 
+/****************************************
+*       FUNCTION DEFINITIONS - Player
+****************************************/
+
 void Player::move(Room* dest){
 	bool valid = false;
 
@@ -458,3 +472,7 @@ bool Player::shoot(vector<Room*> targets){
 
 	return false;
 }
+
+/****************************************
+*       FUNCTION DEFINITIONS - Global
+****************************************/

@@ -207,7 +207,7 @@ template<class R, class A> R narrow_cast(const A& a)
 
 
 
-inline int randint(int min, int max) { static default_random_engine ran; return uniform_int_distribution<>{min, max}(ran); }
+inline int randint(int min, int max) { static default_random_engine ran{time(NULL)}; return uniform_int_distribution<>{min, max}(ran); }
 
 inline int randint(int max) { return randint(0, max); }
 
